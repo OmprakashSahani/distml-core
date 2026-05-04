@@ -34,7 +34,8 @@ def test_simulate_step_time():
     assert result["compute_time"] == 0.025
     assert result["communication_time"] > 0.0
     assert result["step_time"] > result["compute_time"]
-
+    assert result["communication_ratio"] > 0.0
+    assert result["bottleneck"] in {"compute-bound", "communication-bound"}
 
 def test_scaling_efficiency():
     speedup, efficiency = scaling_efficiency(

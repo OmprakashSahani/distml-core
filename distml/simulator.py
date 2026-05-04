@@ -17,11 +17,21 @@ def simulate_step_time(
 
     step_time = effective_compute_time + communication_time
 
+    communication_ratio = communication_time / step_time if step_time > 0 else 0.0
+
+    bottleneck = (
+        "communication-bound"
+        if communication_time > effective_compute_time
+        else "compute-bound"
+    )
+
     return {
         "num_workers": num_workers,
         "compute_time": effective_compute_time,
         "communication_time": communication_time,
         "step_time": step_time,
+        "communication_ratio": communication_ratio,
+        "bottleneck": bottleneck,
     }
 
 

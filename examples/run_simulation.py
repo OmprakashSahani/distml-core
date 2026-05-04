@@ -15,7 +15,7 @@ def run_experiment():
 
     single_time = single_worker["step_time"]
 
-    print("workers\tstep_time\tspeedup\tefficiency")
+    print("workers\tstep_time\tspeedup\tefficiency\tcomm_ratio\tbottleneck")
 
     for n in [1, 2, 4, 8, 16]:
         result = simulate_step_time(
@@ -33,7 +33,10 @@ def run_experiment():
             num_workers=n,
         )
 
-        print(f"{n}\t{step_time:.4f}\t{speedup:.2f}\t{efficiency:.2f}")
+        print(
+ 	    f"{n}\t{step_time:.4f}\t{speedup:.2f}\t{efficiency:.2f}\t"
+   	    f"{result['communication_ratio']:.2f}\t{result['bottleneck']}"
+	)
 
 
 if __name__ == "__main__":
