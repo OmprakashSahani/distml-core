@@ -1,4 +1,4 @@
-from distml.all_reduce import ring_all_reduce_time
+from distml.all_reduce import ring_all_reduce_time, tree_all_reduce_time
 
 
 def simulate_step_time(
@@ -6,14 +6,24 @@ def simulate_step_time(
     compute_time,
     gradient_size_mb,
     bandwidth_gbps,
+    strategy="ring",
 ):
     effective_compute_time = compute_time / num_workers
 
-    communication_time = ring_all_reduce_time(
-        num_workers=num_workers,
-        gradient_size_mb=gradient_size_mb,
-        bandwidth_gbps=bandwidth_gbps,
-    )
+    if strategy == "ring":
+        communication_time = ring_all_reduce_time(
+            num_workers,
+            gradient_size_mb,
+            bandwidth_gbps,
+        )
+    elif strategy == "tree":
+        communication_time = tree_all_reduce_time(
+            num_workers,
+            gradient_size_mb,
+            bandwidth_gbps,
+        )
+    else:
+        raise ValueError(f"Unknown all-reduce strategy: {strategy}")
 
     step_time = effective_compute_time + communication_time
 
@@ -27,6 +37,7 @@ def simulate_step_time(
 
     return {
         "num_workers": num_workers,
+        "strategy": strategy,
         "compute_time": effective_compute_time,
         "communication_time": communication_time,
         "step_time": step_time,
