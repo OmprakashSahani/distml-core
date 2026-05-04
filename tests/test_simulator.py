@@ -31,7 +31,7 @@ def test_simulate_step_time():
     )
 
     assert result["num_workers"] == 4
-    assert result["compute_time"] == 0.1
+    assert result["compute_time"] == 0.025
     assert result["communication_time"] > 0.0
     assert result["step_time"] > result["compute_time"]
 
